@@ -51,7 +51,7 @@ m2_mi <- function(dt, num_m = 10, maxit = 20){
                      ubar = mean(u),
                      b = stats::var(qhat))%>%
     dplyr::mutate(t = ubar + (1 + 1/num_m)*b,
-                  v = (num_m - 1)*(1 + ubar/(b*(1 + 1/num_m))),
+                  v = (num_m - 1)*(1 + ubar/(b*(1 + 1/num_m)))^2,
                   n_l = length(dt$ph_id))
 
   return(out)
