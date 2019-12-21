@@ -7,7 +7,7 @@ incorporating clinical experts survey data for clinical non-inferiority
 margin}
 \usage{
 ci_sur(dt_sur, dt_ct, type = c("all", "obs", "mi", "sing"),
-  subj_miss = FALSE, num_ms = 10)
+  subj_miss = FALSE, num_ms = 10, x_inc = TRUE)
 }
 \arguments{
 \item{dt_sur}{tibble, summarised survey data}
@@ -22,6 +22,9 @@ are incomplete}
 
 \item{num_ms}{numeric, Default: 10, number of imputations for subject level
 data}
+
+\item{x_inc}{logic, Default: TRUE, indicates whether covariate should
+be included in the multiple imputation}
 }
 \value{
 tibble, inlcudes lower/upper confidence interval bounds, and

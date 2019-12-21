@@ -4,7 +4,7 @@
 \alias{subj_mi}
 \title{multiple imputation for subject level data}
 \usage{
-subj_mi(dt, num_ms = 10, maxit = 20)
+subj_mi(dt, num_ms = 10, maxit = 20, x_inc = TRUE)
 }
 \arguments{
 \item{dt}{tibble, subject level data}
@@ -13,6 +13,9 @@ subj_mi(dt, num_ms = 10, maxit = 20)
 
 \item{maxit}{numeris, Default: 20, number of maximum iterations per
 imputation}
+
+\item{x_inc}{logic, Default: TRUE, indicates whether covariate should
+be included in the multiple imputation}
 }
 \value{
 tibble, contains summary of the multiply imputed responses

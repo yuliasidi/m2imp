@@ -4,7 +4,8 @@
 \alias{m2_mi}
 \title{multiple imputation to set a margin}
 \usage{
-m2_mi(dt, num_m = 10, maxit = 20)
+m2_mi(dt, num_m = 10, maxit = 20, mi_method = "norm",
+  use_pckg = "mice", i, n_iter = 100)
 }
 \arguments{
 \item{dt}{tibble, contains clinical experts survey information}
@@ -13,6 +14,15 @@ m2_mi(dt, num_m = 10, maxit = 20)
 
 \item{maxit}{numeris, Default: 20, number of maximum iterations per
 imputation}
+
+\item{mi_method}{characgter, Default: "norm", method used for mice mi}
+
+\item{use_pckg}{character, 'mice' or 'norm', package to be used in MI}
+
+\item{i}{numeric, the seed is defined as 666*i (norm package)}
+
+\item{n_iter}{numeric, Default: 100, number of iterations to be used in data
+augmentation procedure (norm package)}
 }
 \value{
 tibble, contains summary of the multiply imputed responses

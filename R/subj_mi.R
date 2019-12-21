@@ -4,6 +4,8 @@
 #' @param num_ms numeric, Default: 10, number of imputed datasets
 #' @param maxit numeris, Default: 20, number of maximum iterations per
 #' imputation
+#' @param x_inc logic, Default: TRUE, indicates whether covariate should
+#' be included in the multiple imputation
 #' @return tibble, contains summary of the multiply imputed responses
 #' @details the function reads a partially observed subject level data,
 #' then multiple imputes it using mice with logistic model
@@ -18,7 +20,7 @@
 #' @import dplyr
 #' @importFrom stats var
 
-subj_mi <- function(dt, num_ms = 10, maxit = 20){
+subj_mi <- function(dt, num_ms = 10, maxit = 20, x_inc = TRUE){
 
   dtc <- dt%>%dplyr::filter(trt=='c')%>%dplyr::mutate(y = as.factor(y))
   dtt <- dt%>%dplyr::filter(trt=='t')%>%dplyr::mutate(y = as.factor(y))
@@ -28,6 +30,11 @@ subj_mi <- function(dt, num_ms = 10, maxit = 20){
 
   predMt <- mice::make.predictorMatrix(data=dtt)
   predMt[, "trt"] <- 0
+
+  if(!x_inc){
+    predMc[, "x"] <- 0
+    predMt[, "x"] <- 0
+  }
 
   mice_outc <- mice::mice(
     data = dtc,
