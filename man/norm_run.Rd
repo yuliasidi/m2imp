@@ -4,7 +4,7 @@
 \alias{norm_run}
 \title{Runs MI via norm package}
 \usage{
-norm_run(dt_in, num_m = 5, i, n_iter)
+norm_run(dt_in, num_m = 5, i, n_iter, chain = c("one", "multiple"))
 }
 \arguments{
 \item{dt_in}{tibble, to be imputed}
@@ -15,6 +15,8 @@ norm_run(dt_in, num_m = 5, i, n_iter)
 
 \item{n_iter}{numeric, number of iterations to be used in data
 augmentation procedure}
+
+\item{chain}{character, 'one' or 'multiple' chains for data augmentation}
 }
 \value{
 tibble of MI summary: qbar, ubar, b, v and t

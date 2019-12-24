@@ -5,7 +5,7 @@
 \title{multiple imputation to set a margin}
 \usage{
 m2_mi(dt, num_m = 10, maxit = 20, mi_method = "norm",
-  use_pckg = "mice", i, n_iter = 100)
+  use_pckg = "mice", i, n_iter = 100, chain = "one")
 }
 \arguments{
 \item{dt}{tibble, contains clinical experts survey information}
@@ -23,6 +23,9 @@ imputation}
 
 \item{n_iter}{numeric, Default: 100, number of iterations to be used in data
 augmentation procedure (norm package)}
+
+\item{chain}{character, Default 'one', 'one' or 'multiple' chains for data
+augmentation}
 }
 \value{
 tibble, contains summary of the multiply imputed responses

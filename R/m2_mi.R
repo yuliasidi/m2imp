@@ -11,6 +11,8 @@
 #' @param i numeric, the seed is defined as 666*i (norm package)
 #' @param n_iter numeric, Default: 100, number of iterations to be used in data
 #' augmentation procedure (norm package)
+#' @param chain character, Default 'one', 'one' or 'multiple' chains for data
+#' augmentation
 #' @return tibble, contains summary of the multiply imputed responses
 #' @details the function reads a partially observed survey data, then multiple
 #' imputes it using mice with normal model
@@ -26,7 +28,7 @@
 #' @import dplyr
 #' @importFrom stats var
 m2_mi <- function(dt, num_m = 10, maxit = 20, mi_method = 'norm',
-                  use_pckg = 'mice', i, n_iter = 100){
+                  use_pckg = 'mice', i, n_iter = 100, chain = 'one'){
 
   if (use_pckg == 'mice'){
 
@@ -66,7 +68,8 @@ m2_mi <- function(dt, num_m = 10, maxit = 20, mi_method = 'norm',
 
   if (use_pckg == 'norm'){
 
-    out <- norm_run(dt_in = dt, num_m = num_m, i = i, n_iter = n_iter)
+    out <- norm_run(dt_in = dt, num_m = num_m, i = i, n_iter = n_iter,
+                    chain = chain)
 
 
     }

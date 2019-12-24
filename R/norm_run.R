@@ -5,6 +5,7 @@
 #' @param i numeric, the seed is defined as 666*i
 #' @param n_iter numeric, number of iterations to be used in data
 #' augmentation procedure
+#' @param chain character, 'one' or 'multiple' chains for data augmentation
 #' @return tibble of MI summary: qbar, ubar, b, v and t
 #' @details DETAILS
 #' @examples
@@ -24,7 +25,7 @@
 #' @importFrom  tibble tibble as_tibble
 #' @importFrom purrr pmap_dfr
 #' @importFrom stats var
-norm_run <- function(dt_in, num_m = 5, i, n_iter){
+norm_run <- function(dt_in, num_m = 5, i, n_iter, chain = c('one', 'multiple')){
 
   norm::rngseed(seed = 666*i)
   data1 <- as.matrix(dt_in%>%
@@ -34,43 +35,62 @@ norm_run <- function(dt_in, num_m = 5, i, n_iter){
 
   imp_n <- tibble::tibble(i = seq(1, num_m, 1))
 
-  # if (chain == 'one') {
+  if (chain == 'one') {
 
-  thetahat <- norm::em.norm(s, showits = FALSE)
-  thetahat <- norm::da.norm(s, thetahat, steps = 1, showits = FALSE)
+      thetahat <- norm::em.norm(s, showits = FALSE)
+      thetahat <- norm::da.norm(s, thetahat, steps = 1, showits = FALSE)
 
-  xx <- 2
-  diff <- matrix(NA_real_,nrow = n_iter,ncol = 4)
-  diff[1,c(1,2)] <- 100
-  thetahat_old <- thetahat
+      xx <- 2
+      diff <- matrix(NA_real_,nrow = n_iter,ncol = 4)
+      diff[1,c(1,2)] <- 100
+      thetahat_old <- thetahat
 
-  while( xx < n_iter & (diff[xx-1,1] > 1e-4 || diff[xx-1,2] > 1e-5)){
-    thetahat <- norm::da.norm(s, thetahat_old, steps = 1, showits = FALSE)
-    param_out_old <- norm::getparam.norm(s, thetahat_old)
-    param_out <- norm::getparam.norm(s, thetahat)
+      while( xx < n_iter & (diff[xx-1,1] > 1e-4 || diff[xx-1,2] > 1e-5)){
+        thetahat <- norm::da.norm(s, thetahat_old, steps = 1, showits = FALSE)
+        param_out_old <- norm::getparam.norm(s, thetahat_old)
+        param_out <- norm::getparam.norm(s, thetahat)
 
-    diff[xx,1] <- abs(param_out$mu[2] - param_out_old$mu[2])
-    diff[xx,2] <- abs(param_out$sigma[2,2] - param_out_old$sigma[2,2])
-    diff[xx,3] <- param_out$mu[2]
-    diff[xx,4] <- param_out$sigma[2,2]
+        diff[xx,1] <- abs(param_out$mu[2] - param_out_old$mu[2])
+        diff[xx,2] <- abs(param_out$sigma[2,2] - param_out_old$sigma[2,2])
+        diff[xx,3] <- param_out$mu[2]
+        diff[xx,4] <- param_out$sigma[2,2]
 
-    thetahat_old <- thetahat
-    xx <- xx + 1
+        thetahat_old <- thetahat
+        xx <- xx + 1
+      }
+
   }
-
-  # return(thetahat)
-  # }
 
   mi_sum <- purrr::pmap_dfr(imp_n, .f=function(i){
 
 
-    # if (chain == 'multiple') {
-    #
-    #   thetahat <- norm::em.norm(s, showits = FALSE)
-    #   thetahat <- norm::da.norm(s, thetahat, steps = n_iter, showits = FALSE)
-    #   return(thetahat)
-    # }
+     if (chain == 'multiple') {
 
+       thetahat <- norm::em.norm(s, showits = FALSE)
+       thetahat <- norm::da.norm(s, thetahat, steps = 1, showits = FALSE)
+
+       xx <- 2
+       diff <- matrix(NA_real_,nrow = n_iter,ncol = 4)
+       diff[1,c(1,2)] <- 100
+       thetahat_old <- thetahat
+
+       while( xx < n_iter & (diff[xx-1,1] > 1e-4 || diff[xx-1,2] > 1e-5)){
+         thetahat <- norm::da.norm(s, thetahat_old, steps = 1, showits = FALSE)
+         param_out_old <- norm::getparam.norm(s, thetahat_old)
+         param_out <- norm::getparam.norm(s, thetahat)
+
+         diff[xx,1] <- abs(param_out$mu[2] - param_out_old$mu[2])
+         diff[xx,2] <- abs(param_out$sigma[2,2] - param_out_old$sigma[2,2])
+         diff[xx,3] <- param_out$mu[2]
+         diff[xx,4] <- param_out$sigma[2,2]
+
+         thetahat_old <- thetahat
+         xx <- xx + 1
+
+        }
+        }
+
+    thetahat <- norm::da.norm(s, thetahat, steps = 100)
     dt_mi <- norm::imp.norm(s, thetahat, data1)%>%
       tibble::as_tibble()%>%
       dplyr::bind_cols(dt_in%>%
