@@ -5,7 +5,7 @@
 \title{multiple imputation to set a margin}
 \usage{
 m2_mi(dt, num_m = 10, maxit = 20, mi_method = "norm",
-  use_pckg = "mice", i, n_iter = 100, chain = "one")
+  use_pckg = "mice", i, n_iter = 100, chain = "one", n_minb = 2)
 }
 \arguments{
 \item{dt}{tibble, contains clinical experts survey information}
@@ -26,6 +26,9 @@ augmentation procedure (norm package)}
 
 \item{chain}{character, Default 'one', 'one' or 'multiple' chains for data
 augmentation}
+
+\item{n_minb}{numeric, Default 3, to set minbucket for mice when 'cart' is
+used}
 }
 \value{
 tibble, contains summary of the multiply imputed responses

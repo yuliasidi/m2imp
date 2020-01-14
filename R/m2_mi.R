@@ -13,6 +13,8 @@
 #' augmentation procedure (norm package)
 #' @param chain character, Default 'one', 'one' or 'multiple' chains for data
 #' augmentation
+#' @param n_minb numeric, Default 3, to set minbucket for mice when 'cart' is
+#' used
 #' @return tibble, contains summary of the multiply imputed responses
 #' @details the function reads a partially observed survey data, then multiple
 #' imputes it using mice with normal model
@@ -28,7 +30,7 @@
 #' @import dplyr
 #' @importFrom stats var
 m2_mi <- function(dt, num_m = 10, maxit = 20, mi_method = 'norm',
-                  use_pckg = 'mice', i, n_iter = 100, chain = 'one'){
+                  use_pckg = 'mice', i, n_iter = 100, chain = 'one', n_minb = 2){
 
   if (use_pckg == 'mice'){
 
@@ -42,7 +44,8 @@ m2_mi <- function(dt, num_m = 10, maxit = 20, mi_method = 'norm',
       maxit = maxit,
       method = mi_method,
       predictorMatrix=predM,
-      printFlag = FALSE
+      printFlag = FALSE,
+      minbucket = n_minb
     )
 
 
