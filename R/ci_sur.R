@@ -40,7 +40,7 @@ ci_sur <- function(dt_sur, dt_ct, type = c('all', 'obs', 'mi', 'sing'), subj_mis
       dplyr::mutate(p_sum = purrr::pmap(list(m2 = mean_l), bin2mi::p2_mle,
                                         dt = dt_ct%>%
                                           dplyr::filter(is.na(y)==FALSE)))%>%
-      tidyr::unnest()%>%
+      tidyr::unnest(cols = c(p_sum))%>%
       dplyr::mutate(ci_u = phat_d - (1 - mean_l)*m1 + stats::qnorm(1-alpha)*sqrt(var_d + m1*sd_l^2/n_l),
                     ci_l = phat_d - (1 - mean_l)*m1 - stats::qnorm(1-alpha)*sqrt(var_d + m1*sd_l^2/n_l),
                     ni_des = ifelse(ci_u < 0, 1, 0),
@@ -60,7 +60,7 @@ ci_sur <- function(dt_sur, dt_ct, type = c('all', 'obs', 'mi', 'sing'), subj_mis
     out <- dt_sur%>%
       dplyr::mutate(p_sum = purrr::pmap(list(m2 = mean_l), bin2mi::p2_mle,
                                         dt = dt_ct))%>%
-      tidyr::unnest()%>%
+      tidyr::unnest(cols = c(p_sum))%>%
       dplyr::mutate(ci_u = phat_d - (1 - mean_l)*m1 + tval*sqrt(var_d + m1*sd_l^2),
                     ci_l = phat_d - (1 - mean_l)*m1 - tval*sqrt(var_d + m1*sd_l^2),
                     ni_des = ifelse(ci_u < 0, 1, 0),
